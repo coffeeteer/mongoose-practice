@@ -44,12 +44,39 @@ function processAllFieldsOfTheForm(req, res){
 }
 
 function processFormFieldsIndividual(req, res){
+	//Store the data from the fields in your data store.
+	//The data store could be a file of database or any other store based
+	//on you application. 
 	var fields = [];
 	var form = new formidable.IncomingForm();
+	//Callback when each field in the form is parsed.
 	form.on('field', function(field, value) {
 		console.log(field);
 		console.log(value);
 		fields[field] = value;
+	});
+
+	//Callback when each field in the form is parsed.
+	form.on('file', function(name, file) {
+		console.log(name);
+		console.log(file);
+		fields[name] = file;
+		//Storing the files meta in fields array.
+		//Depending on the application you can process it accordingly.
+	});
+
+	//Callback for file upload progress
+	form.on('progress', function(bytesReceived, bytesExpected){
+		var progress = {
+			type: 'progress',
+			bytesReceived: bytesReceived,
+			bytesExpected: bytesExpected
+		};
+
+		console.log(progress);
+		//Logging the progress on the console.
+		//Depending on your application you can either send the progress to client
+		//for some visual feedback or perform some other operation
 	});
 
 	form.on('end', function(){
